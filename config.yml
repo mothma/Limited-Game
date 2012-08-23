@@ -3,5 +3,5 @@ general:
   autostart: true
   # Minimum number of players to auto start the game
   autostartMin: 7
-  # Auto stop the game whne the players fall to this level
+  # Auto stop the game when the players fall to this level
   autostopMin: 5

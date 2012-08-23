@@ -221,9 +221,15 @@ public class LimitedGame extends JavaPlugin implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	void playerQuit(PlayerQuitEvent event) {		
-		if (getServer().getOnlinePlayers().length == (autostopMin - 1) && autostart) {
-			stopGame();
-		}
+		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			@Override
+			public void run() {
+				int players = getServer().getOnlinePlayers().length - autostopMin;
+				if ( (players < 1 && players >-2) && autostart) {
+					stopGame();
+				}
+			}
+		}, 20L);	
 	}
 	
 }
