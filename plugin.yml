@@ -1,7 +1,7 @@
 name: Limited Game
 main: me.mothma.limitedgame.LimitedGame
-version: 0.1
+version: 0.2
 commands:
   lg:
     description: Main command for Limited Game
-    usage: /lg [setlobby/setarena/list/start/stop]
+    usage: /lg [setlobby/setarena/list/start/stop/lobbyzone/arenazone]
