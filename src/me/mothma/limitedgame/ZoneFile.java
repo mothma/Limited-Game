@@ -9,12 +9,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashSet;
 
-public class GamePlayerFile {
+public class ZoneFile {
 	
-	private HashSet<GamePlayer> GamePlayerSet = new HashSet<GamePlayer>();
+	private HashSet<Zone> zoneSet = new HashSet<Zone>();
 	private File storageFile;
 
-	public GamePlayerFile (File file) {
+	public ZoneFile (File file) {
 		storageFile = file;
 				
 		if (!storageFile.exists()) {
@@ -30,10 +30,10 @@ public class GamePlayerFile {
 		try {
 		  FileInputStream fis = new FileInputStream(storageFile);
 		  ObjectInputStream in = new ObjectInputStream(fis);
-		  GamePlayer obj = (GamePlayer) in.readObject();
+		  Zone obj = (Zone) in.readObject();
 		  while (obj != null) {
-			  GamePlayerSet.add(obj);
-			  obj = (GamePlayer) in.readObject();
+			  zoneSet.add(obj);
+			  obj = (Zone) in.readObject();
 		  }		  
 		  in.close();
 		}
@@ -51,7 +51,7 @@ public class GamePlayerFile {
 		try {
 		  FileOutputStream fos = new FileOutputStream(storageFile);
 		  ObjectOutputStream out = new ObjectOutputStream(fos);
-		  for (GamePlayer c : GamePlayerSet) {
+		  for (Zone c : zoneSet) {
 			  out.writeObject(c);
 		  }		  
 		  out.close();
@@ -60,7 +60,7 @@ public class GamePlayerFile {
 		}
 	}
 	
-	public HashSet<GamePlayer> getSet() {
-		return GamePlayerSet;
+	public HashSet<Zone> getSet() {
+		return zoneSet;
 	}
 }

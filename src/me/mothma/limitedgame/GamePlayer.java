@@ -9,18 +9,18 @@ import org.bukkit.inventory.ItemStack;
 public class GamePlayer implements Serializable {
 	private static final long serialVersionUID = 5063558155292411080L;
 	
-	String name;
-	boolean inLobby;	
-	LGItemStack[] inventory;
-	LGItemStack[] armor;
+	private String name;
+	private boolean inLobby;	
+	private LGItemStack[] inventory;
+	private LGItemStack[] armor;
 	
 	
-	double x;
-	double y;
-	double z;
+	private double x;
+	private double y;
+	private double z;
 	
-	int foodlevel;
-	int health;
+	private int foodlevel;
+	private int health;
 	
 	public GamePlayer(String name, boolean inLobby, ItemStack[] inventory, ItemStack[] armor, Location location) {
 		this.name = name;
