@@ -109,6 +109,10 @@ public class LimitedGame extends JavaPlugin implements Listener {
 			}
 			
 			if (args[0].equalsIgnoreCase("list")) {
+				if (player != null && !player.hasPermission("limitedgame.list")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				sender.sendMessage(ChatColor.GREEN + "Players (Red means in lobby):");
 				String list = "";
 				int n = 0;
@@ -127,6 +131,10 @@ public class LimitedGame extends JavaPlugin implements Listener {
 				}				
 				sender.sendMessage(list);
 			} else if (args[0].equalsIgnoreCase("setlobby")) {
+				if (player != null && !player.hasPermission("limitedgame.set")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				if (player == null) {
 					sender.sendMessage(ChatColor.RED + "You must be a player!");
 				} else {
@@ -136,6 +144,10 @@ public class LimitedGame extends JavaPlugin implements Listener {
 					player.sendMessage(ChatColor.GREEN + "The lobby spawn has been set to your position!");
 				}
 			} else if (args[0].equalsIgnoreCase("setarena")) {
+				if (player != null && !player.hasPermission("limitedgame.set")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				if (player == null) {
 					sender.sendMessage(ChatColor.RED + "You must be a player!");
 				} else {
@@ -145,13 +157,25 @@ public class LimitedGame extends JavaPlugin implements Listener {
 					player.sendMessage(ChatColor.GREEN + "The arena spawn has been set to your position!");
 				}
 			} else if (args[0].equalsIgnoreCase("start")) {
+				if (player != null && !player.hasPermission("limitedgame.run")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				getServer().broadcastMessage(ChatColor.GREEN + "Let the games begin!");
 				sender.sendMessage("Forcing a game start");
 				startGame();
 			} else if (args[0].equalsIgnoreCase("stop")) {
+				if (player != null && !player.hasPermission("limitedgame.run")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				sender.sendMessage("Forcing a game stop");
 				stopGame();
 			} else if (args[0].equalsIgnoreCase("updateplayers")) {
+				if (player != null && !player.hasPermission("limitedgame.run")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				for (Player serverPlayer : getServer().getOnlinePlayers()) {
 					for (GamePlayer p : gamePlayerData.getSet()) {
 						if (p.getName().equals(serverPlayer.getName()) && !p.inLobby()) {
@@ -165,6 +189,10 @@ public class LimitedGame extends JavaPlugin implements Listener {
 				}
 				gamePlayerData.save();
 			}  else if (args[0].equalsIgnoreCase("lobbyzone")) {
+				if (player != null && !player.hasPermission("limitedgame.set")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				if (player == null) {
 					sender.sendMessage(ChatColor.RED + "You must be a player!");
 					return true;
@@ -181,6 +209,10 @@ public class LimitedGame extends JavaPlugin implements Listener {
 					zoneData.save();
 				}
 			}  else if (args[0].equalsIgnoreCase("arenazone")) {
+				if (player != null && !player.hasPermission("limitedgame.set")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				if (player == null) {
 					sender.sendMessage(ChatColor.RED + "You must be a player!");
 					return true;
@@ -197,6 +229,10 @@ public class LimitedGame extends JavaPlugin implements Listener {
 					zoneData.save();
 				}
 			} else if (args[0].equalsIgnoreCase("walls")) {
+				if (player != null && !player.hasPermission("limitedgame.generate")) {
+					player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+					return true;
+				}
 				if (player == null) {
 					sender.sendMessage(ChatColor.RED + "You must be a player!");
 					return true;
@@ -333,8 +369,11 @@ public class LimitedGame extends JavaPlugin implements Listener {
 	private void mainHeartbeat() {
 		if (lobbyZone != null && arenaZone != null)
 		for (Player serverPlayer : getServer().getOnlinePlayers()) {
-			for (GamePlayer p : gamePlayerData.getSet()) {
-				if (p.getName().equals(serverPlayer.getName()) && !serverPlayer.hasPermission("limitedgame.movement")); {
+			if (serverPlayer.hasPermission("limitedgame.movement")) {
+				continue;
+			}
+			for (GamePlayer p : gamePlayerData.getSet() ) {				
+				if (p.getName().equals(serverPlayer.getName())); {
 					if (p.inLobby() && !lobbyZone.contains(serverPlayer.getLocation())) {
 						serverPlayer.sendMessage(ChatColor.RED + "Back to the lobby with ye!");
 						serverPlayer.teleport(lobbySpawn);
