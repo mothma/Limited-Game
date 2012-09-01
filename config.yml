@@ -1,4 +1,6 @@
 general:
+  # IMPORTANT: Change to the world name you are using
+  worldname: world
   # Enable the auto start and stop of games
   autostart: true
   # Minimum number of players to auto start the game

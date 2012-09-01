@@ -24,6 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class LimitedGame extends JavaPlugin implements Listener {
 	
 	private Logger log;
+	private World world;
 	
 	private FileConfiguration config;
 	private GamePlayerFile gamePlayerData;
@@ -40,7 +41,7 @@ public class LimitedGame extends JavaPlugin implements Listener {
 	
 	boolean autostart;
 	int autostartMin = 2;
-	int autostopMin = 1;		
+	int autostopMin = 1;			
 	
 	@Override
 	public void onEnable() {
@@ -59,7 +60,7 @@ public class LimitedGame extends JavaPlugin implements Listener {
 		gamePlayerData.load();
 		locationData.load();
 		worldData.load();
-		zoneData.load();
+		zoneData.load();				
 		
 		for (Zone z : zoneData.getSet()) {
 			if (z.name.equals("lobbyzone")) {
@@ -81,6 +82,7 @@ public class LimitedGame extends JavaPlugin implements Listener {
 	    this.autostart = config.getBoolean("general.autostart");
 	    this.autostartMin = config.getInt("general.autostartMin");
 	    this.autostopMin = config.getInt("general.autostopMin");
+	    this.world = getServer().getWorld(config.getString("general.worldname"));
 		
 		log.info("Limited Game has been enabled!");	
 		getServer().getPluginManager().registerEvents(this, this);
@@ -179,7 +181,7 @@ public class LimitedGame extends JavaPlugin implements Listener {
 				for (Player serverPlayer : getServer().getOnlinePlayers()) {
 					for (GamePlayer p : gamePlayerData.getSet()) {
 						if (p.getName().equals(serverPlayer.getName()) && !p.inLobby()) {
-							Location l = new Location(getServer().getWorld("world"), p.getX(), p.getY(), p.getZ());
+							Location l = new Location(world, p.getX(), p.getY(), p.getZ());
 							p.setLocation(l);
 							p.setInventory(serverPlayer.getInventory().getContents());
 							p.setFoodlevel(serverPlayer.getFoodLevel());
@@ -311,8 +313,8 @@ public class LimitedGame extends JavaPlugin implements Listener {
 		for (GamePlayer p : gamePlayerData.getSet()) {			
 			Player serverPlayer = getServer().getPlayer(p.getName());
 			if (serverPlayer != null && p.inLobby()) {
-				Location nullLocation = new Location(getServer().getWorld("world"), 0, 0, 0);
-				Location l = new Location(getServer().getWorld("world"), p.getX(), p.getY(), p.getZ());
+				Location nullLocation = new Location(world, 0, 0, 0);
+				Location l = new Location(world, p.getX(), p.getY(), p.getZ());
 				if (l.equals(nullLocation) && arenaSpawn != null) {
 					serverPlayer.teleport(arenaSpawn);
 				} else {
@@ -328,7 +330,7 @@ public class LimitedGame extends JavaPlugin implements Listener {
 		gamePlayerData.save();
 		
 		for (GameWorld w : worldData.getSet()) {
-			w.setWorld(getServer().getWorld("world"));
+			w.setWorld(world);
 		}
 	}
 	
@@ -357,11 +359,11 @@ public class LimitedGame extends JavaPlugin implements Listener {
 		gamePlayerData.save();
 		
 		if (worldData.getSet().size() == 0) {
-			World w = getServer().getWorld("world");
+			World w = world;
 			worldData.getSet().add(new GameWorld(w.getTime(), w.getWeatherDuration()));
 		}
 		for (GameWorld w : worldData.getSet()) {
-			w.update(getServer().getWorld("world"));
+			w.update(world);
 		}
 		worldData.save();
 	}
@@ -405,7 +407,7 @@ public class LimitedGame extends JavaPlugin implements Listener {
 			}
 		}
 		if (!alreadyAdded) {			
-			gamePlayerData.getSet().add(new GamePlayer(event.getPlayer().getName(), true, event.getPlayer().getInventory().getContents(), event.getPlayer().getInventory().getArmorContents(), new Location(getServer().getWorld("world"), 0, 0, 0)));
+			gamePlayerData.getSet().add(new GamePlayer(event.getPlayer().getName(), true, event.getPlayer().getInventory().getContents(), event.getPlayer().getInventory().getArmorContents(), new Location(world, 0, 0, 0)));
 		}
 		for (GamePlayer p : gamePlayerData.getSet()) {
 			if (p.getName().equals(event.getPlayer().getName())) {
